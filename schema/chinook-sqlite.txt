@@ -1,0 +1,224 @@
+Table: albums
+Columns:
+  AlbumId (INTEGER)
+  Title (NVARCHAR(160))
+  ArtistId (INTEGER)
+
+Table: sqlite_sequence
+Columns:
+  name ()
+  seq ()
+
+Table: artists
+Columns:
+  ArtistId (INTEGER)
+  Name (NVARCHAR(120))
+
+Table: customers
+Columns:
+  CustomerId (INTEGER)
+  FirstName (NVARCHAR(40))
+  LastName (NVARCHAR(20))
+  Company (NVARCHAR(80))
+  Address (NVARCHAR(70))
+  City (NVARCHAR(40))
+  State (NVARCHAR(40))
+  Country (NVARCHAR(40))
+  PostalCode (NVARCHAR(10))
+  Phone (NVARCHAR(24))
+  Fax (NVARCHAR(24))
+  Email (NVARCHAR(60))
+  SupportRepId (INTEGER)
+
+Table: employees
+Columns:
+  EmployeeId (INTEGER)
+  LastName (NVARCHAR(20))
+  FirstName (NVARCHAR(20))
+  Title (NVARCHAR(30))
+  ReportsTo (INTEGER)
+  BirthDate (DATETIME)
+  HireDate (DATETIME)
+  Address (NVARCHAR(70))
+  City (NVARCHAR(40))
+  State (NVARCHAR(40))
+  Country (NVARCHAR(40))
+  PostalCode (NVARCHAR(10))
+  Phone (NVARCHAR(24))
+  Fax (NVARCHAR(24))
+  Email (NVARCHAR(60))
+
+Table: genres
+Columns:
+  GenreId (INTEGER)
+  Name (NVARCHAR(120))
+
+Table: invoices
+Columns:
+  InvoiceId (INTEGER)
+  CustomerId (INTEGER)
+  InvoiceDate (DATETIME)
+  BillingAddress (NVARCHAR(70))
+  BillingCity (NVARCHAR(40))
+  BillingState (NVARCHAR(40))
+  BillingCountry (NVARCHAR(40))
+  BillingPostalCode (NVARCHAR(10))
+  Total (NUMERIC(10,2))
+
+Table: invoice_items
+Columns:
+  InvoiceLineId (INTEGER)
+  InvoiceId (INTEGER)
+  TrackId (INTEGER)
+  UnitPrice (NUMERIC(10,2))
+  Quantity (INTEGER)
+
+Table: media_types
+Columns:
+  MediaTypeId (INTEGER)
+  Name (NVARCHAR(120))
+
+Table: playlists
+Columns:
+  PlaylistId (INTEGER)
+  Name (NVARCHAR(120))
+
+Table: playlist_track
+Columns:
+  PlaylistId (INTEGER)
+  TrackId (INTEGER)
+
+Table: tracks
+Columns:
+  TrackId (INTEGER)
+  Name (NVARCHAR(200))
+  AlbumId (INTEGER)
+  MediaTypeId (INTEGER)
+  GenreId (INTEGER)
+  Composer (NVARCHAR(220))
+  Milliseconds (INTEGER)
+  Bytes (INTEGER)
+  UnitPrice (NUMERIC(10,2))
+
+Table: sqlite_stat1
+Columns:
+  tbl ()
+  idx ()
+  stat ()
+
+Here is a detailed summary of each table from the provided database schema, including primary keys, foreign keys, and inferred relationships:
+
+### 1. Table: albums
+- **Primary Key**: `AlbumId`
+- **Foreign Key Relationships**:
+  - `ArtistId` references `ArtistId` in the `artists` table (indicating the artist who created the album).
+- **Inferred Relationships**:
+  - Each album can have multiple tracks, connecting to the `tracks` table through `AlbumId`.
+
+---
+
+### 2. Table: sqlite_sequence
+- **Primary Key**: None (Generally used for sequence information in SQLite)
+- **Foreign Key Relationships**: None
+- **Inferred Relationships**: This table is typically not used for direct relationships but to keep track of the number of rows in tables with an auto-incrementing primary key.
+
+---
+
+### 3. Table: artists
+- **Primary Key**: `ArtistId`
+- **Foreign Key Relationships**: None
+- **Inferred Relationships**:
+  - An artist can have multiple albums, hence a one-to-many relationship with the `albums` table.
+
+---
+
+### 4. Table: customers
+- **Primary Key**: `CustomerId`
+- **Foreign Key Relationships**:
+  - `SupportRepId` may reference `EmployeeId` in the `employees` table (indicating the employee assigned to support this customer).
+- **Inferred Relationships**:
+  - Customers can have multiple invoices, establishing a one-to-many relationship with the `invoices` table.
+
+---
+
+### 5. Table: employees
+- **Primary Key**: `EmployeeId`
+- **Foreign Key Relationships**:
+  - `ReportsTo` may reference `EmployeeId` referencing the employee that this employee reports to, establishing a self-referential relationship.
+- **Inferred Relationships**:
+  - An employee can be associated with multiple customers through the `SupportRepId` in the `customers` table.
+
+---
+
+### 6. Table: genres
+- **Primary Key**: `GenreId`
+- **Foreign Key Relationships**: None
+- **Inferred Relationships**:
+  - Genres can be associated with multiple tracks, creating a one-to-many relationship with the `tracks` table.
+
+---
+
+### 7. Table: invoices
+- **Primary Key**: `InvoiceId`
+- **Foreign Key Relationships**:
+  - `CustomerId` references `CustomerId` in the `customers` table (indicating which customer made the invoice).
+- **Inferred Relationships**:
+  - An invoice can have multiple items which connect to the `invoice_items` table.
+
+---
+
+### 8. Table: invoice_items
+- **Primary Key**: `InvoiceLineId`
+- **Foreign Key Relationships**:
+  - `InvoiceId` references `InvoiceId` in the `invoices` table (indicating to which invoice this item belongs).
+  - `TrackId` may reference `TrackId` in the `tracks` table (indicating which track was sold).
+- **Inferred Relationships**: 
+  - Each invoice can consist of multiple line items linking to the `tracks` table.
+
+---
+
+### 9. Table: media_types
+- **Primary Key**: `MediaTypeId`
+- **Foreign Key Relationships**: None
+- **Inferred Relationships**:
+  - Media types can be associated with multiple tracks, establishing a one-to-many relationship with the `tracks` table.
+
+---
+
+### 10. Table: playlists
+- **Primary Key**: `PlaylistId`
+- **Foreign Key Relationships**: None
+- **Inferred Relationships**:
+  - Playlists can contain multiple tracks, which connects to the `playlist_track` table.
+
+---
+
+### 11. Table: playlist_track
+- **Primary Key**: No explicit primary key indicated, but it functions as a linking table.
+- **Foreign Key Relationships**:
+  - `PlaylistId` references `PlaylistId` in the `playlists` table (indicating to which playlist the track belongs).
+  - `TrackId` references `TrackId` in the `tracks` table (indicating which track is included in the playlist).
+- **Inferred Relationships**:
+  - This table represents a many-to-many relationship between playlists and tracks.
+
+---
+
+### 12. Table: tracks
+- **Primary Key**: `TrackId`
+- **Foreign Key Relationships**:
+  - `AlbumId` references `AlbumId` in the `albums` table (indicating which album the track belongs to).
+  - `MediaTypeId` references `MediaTypeId` in the `media_types` table (indicating the media type of the track).
+  - `GenreId` references `GenreId` in the `genres` table (indicating which genre the track belongs to).
+- **Inferred Relationships**:
+  - Each track can be part of multiple playlists connected through the `playlist_track` table.
+
+---
+
+### 13. Table: sqlite_stat1
+- **Primary Key**: None
+- **Foreign Key Relationships**: None
+- **Inferred Relationships**: Similar to `sqlite_sequence`, this table is typically not used for direct relationships in the application but rather for database statistics.
+
+--- 
+
+This summary encapsulates the primary keys, foreign keys, and inferred relationships for each table present in the provided database schema.

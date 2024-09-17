@@ -1,0 +1,182 @@
+Table: aircrafts_data
+Columns:
+  range (bigint)
+  aircraft_code (text)
+  model (text)
+
+Table: airports_data
+Columns:
+  airport_code (text)
+  airport_name (text)
+  city (text)
+  coordinates (text)
+  timezone (text)
+
+Table: boarding_passes
+Columns:
+  ticket_no (bigint)
+  flight_id (bigint)
+  boarding_no (bigint)
+  seat_no (text)
+
+Table: bookings
+Columns:
+  total_amount (bigint)
+  book_ref (text)
+  book_date (text)
+
+Table: flights
+Columns:
+  flight_id (bigint)
+  flight_no (text)
+  scheduled_departure (text)
+  scheduled_arrival (text)
+  departure_airport (text)
+  arrival_airport (text)
+  status (text)
+  aircraft_code (text)
+  actual_departure (text)
+  actual_arrival (text)
+
+Table: seats
+Columns:
+  aircraft_code (text)
+  seat_no (text)
+  fare_conditions (text)
+
+Table: tickets
+Columns:
+  ticket_no (bigint)
+  book_ref (text)
+  passenger_id (text)
+
+Table: ticket_flights
+Columns:
+  ticket_no (bigint)
+  flight_id (bigint)
+  amount (bigint)
+  fare_conditions (text)
+
+Here's a detailed summary of each table based on the provided database schema, including primary keys, foreign keys, and inferred relationships:
+
+### 1. **Table: aircrafts_data**
+- **Columns**: 
+  - range (bigint)
+  - aircraft_code (text)
+  - model (text)
+- **Primary Key**: `aircraft_code`
+- **Relationships**: 
+  - This table is likely referenced in the `flights` and `seats` tables through the `aircraft_code`, making it the main reference for the details of each aircraft.
+
+---
+
+### 2. **Table: airports_data**
+- **Columns**: 
+  - airport_code (text)
+  - airport_name (text)
+  - city (text)
+  - coordinates (text)
+  - timezone (text)
+- **Primary Key**: `airport_code`
+- **Relationships**:
+  - The `departur_airport` and `arrival_airport` columns in the `flights` table presumably reference `airport_code` from the `airports_data` table.
+
+---
+
+### 3. **Table: boarding_passes**
+- **Columns**: 
+  - ticket_no (bigint)
+  - flight_id (bigint)
+  - boarding_no (bigint)
+  - seat_no (text)
+- **Primary Key**: Composite Key (`ticket_no`, `flight_id`)
+- **Foreign Key Relationships**:
+  - `ticket_no` references `tickets(ticket_no)`.
+  - `flight_id` references `flights(flight_id)`.
+- **Relationships**:
+  - Each boarding pass is linked to a particular ticket and flight, indicating that a boarding pass is issued for a specific flight associated with a ticket.
+
+---
+
+### 4. **Table: bookings**
+- **Columns**:
+  - total_amount (bigint)
+  - book_ref (text)
+  - book_date (text)
+- **Primary Key**: `book_ref`
+- **Relationships**:
+  - The `book_ref` field is referenced in the `tickets` table, suggesting that each ticket is linked to a specific booking.
+
+---
+
+### 5. **Table: flights**
+- **Columns**: 
+  - flight_id (bigint)
+  - flight_no (text)
+  - scheduled_departure (text)
+  - scheduled_arrival (text)
+  - departure_airport (text)
+  - arrival_airport (text)
+  - status (text)
+  - aircraft_code (text)
+  - actual_departure (text)
+  - actual_arrival (text)
+- **Primary Key**: `flight_id`
+- **Foreign Key Relationships**:
+  - `departure_airport` references `airports_data(airport_code)`.
+  - `arrival_airport` references `airports_data(airport_code)`.
+  - `aircraft_code` references `aircrafts_data(aircraft_code)`.
+- **Relationships**:
+  - Each flight is linked to specific departure and arrival airports, as well as an aircraft, connecting it to the `airports_data` and `aircrafts_data` tables.
+
+---
+
+### 6. **Table: seats**
+- **Columns**:
+  - aircraft_code (text)
+  - seat_no (text)
+  - fare_conditions (text)
+- **Primary Key**: Composite Key (`aircraft_code`, `seat_no`)
+- **Foreign Key Relationships**:
+  - `aircraft_code` references `aircrafts_data(aircraft_code)`.
+- **Relationships**:
+  - This table outlines the seating arrangement for each aircraft and establishes a relationship with the aircraft details from the `aircrafts_data` table.
+
+---
+
+### 7. **Table: tickets**
+- **Columns**:
+  - ticket_no (bigint)
+  - book_ref (text)
+  - passenger_id (text)
+- **Primary Key**: `ticket_no`
+- **Foreign Key Relationships**:
+  - `book_ref` references `bookings(book_ref)`.
+- **Relationships**:
+  - Each ticket is linked to a specific booking, suggesting that a ticket is an outcome of a completed booking process.
+
+---
+
+### 8. **Table: ticket_flights**
+- **Columns**:
+  - ticket_no (bigint)
+  - flight_id (bigint)
+  - amount (bigint)
+  - fare_conditions (text)
+- **Primary Key**: Composite Key (`ticket_no`, `flight_id`)
+- **Foreign Key Relationships**:
+  - `ticket_no` references `tickets(ticket_no)`.
+  - `flight_id` references `flights(flight_id)`.
+- **Relationships**:
+  - This table connects tickets to the flights they are associated with, capturing the details such as the amount paid and the fare conditions for each ticket related to a specific flight.
+
+---
+
+### Summary of Relationships:
+- **`aircrafts_data`** is connected to both **`flights`** and **`seats`** through `aircraft_code`.
+- **`airports_data`** is connected to **`flights`** for departure and arrival airports via `airport_code`.
+- **`bookings`** serves as a reference for **`tickets`** through `book_ref`.
+- **`tickets`** connects to **`boarding_passes`** and **`ticket_flights`** both through `ticket_no`.
+- **`flights`** links to **`boarding_passes`** and **`ticket_flights`** through `flight_id`. 
+
+This schema provides a solid structure for managing an airline booking system, detailing aircraft, flights, bookings, tickets, and associated airport information comprehensively.

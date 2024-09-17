@@ -1,0 +1,204 @@
+Table: artist
+Columns:
+  artist_id (integer)
+  name (character varying)
+
+Table: album
+Columns:
+  album_id (integer)
+  artist_id (integer)
+  title (character varying)
+
+Table: employee
+Columns:
+  birth_date (timestamp without time zone)
+  hire_date (timestamp without time zone)
+  reports_to (integer)
+  employee_id (integer)
+  address (character varying)
+  city (character varying)
+  state (character varying)
+  country (character varying)
+  postal_code (character varying)
+  phone (character varying)
+  fax (character varying)
+  email (character varying)
+  last_name (character varying)
+  first_name (character varying)
+  title (character varying)
+
+Table: customer
+Columns:
+  customer_id (integer)
+  support_rep_id (integer)
+  last_name (character varying)
+  company (character varying)
+  address (character varying)
+  city (character varying)
+  state (character varying)
+  country (character varying)
+  postal_code (character varying)
+  phone (character varying)
+  fax (character varying)
+  email (character varying)
+  first_name (character varying)
+
+Table: invoice
+Columns:
+  invoice_id (integer)
+  customer_id (integer)
+  invoice_date (timestamp without time zone)
+  total (numeric)
+  billing_city (character varying)
+  billing_state (character varying)
+  billing_country (character varying)
+  billing_postal_code (character varying)
+  billing_address (character varying)
+
+Table: invoice_line
+Columns:
+  invoice_line_id (integer)
+  invoice_id (integer)
+  track_id (integer)
+  unit_price (numeric)
+  quantity (integer)
+
+Table: track
+Columns:
+  unit_price (numeric)
+  bytes (integer)
+  track_id (integer)
+  album_id (integer)
+  media_type_id (integer)
+  genre_id (integer)
+  milliseconds (integer)
+  name (character varying)
+  composer (character varying)
+
+Table: playlist
+Columns:
+  playlist_id (integer)
+  name (character varying)
+
+Table: playlist_track
+Columns:
+  playlist_id (integer)
+  track_id (integer)
+
+Table: genre
+Columns:
+  genre_id (integer)
+  name (character varying)
+
+Table: media_type
+Columns:
+  media_type_id (integer)
+  name (character varying)
+
+Here’s a detailed summary of each table in the provided schema, along with their primary keys, foreign key relationships, and inferred relationships:
+
+### 1. Table: artist
+- **Primary Key:** 
+  - `artist_id`
+- **Foreign Keys:** 
+  - None.
+- **Inferred Relationships:** 
+  - The `artist` table likely has a one-to-many relationship with the `album` table (one artist can release multiple albums).
+
+### 2. Table: album
+- **Primary Key:** 
+  - `album_id`
+- **Foreign Keys:** 
+  - `artist_id` (references `artist.artist_id`)
+- **Inferred Relationships:** 
+  - Each `album` is associated with an `artist`, creating a many-to-one relationship between `album` and `artist`.
+
+### 3. Table: employee
+- **Primary Key:** 
+  - `employee_id`
+- **Foreign Keys:** 
+  - `reports_to` (can reference `employee.employee_id` for managerial hierarchy).
+- **Inferred Relationships:** 
+  - This table represents a self-referential relationship where an employee may report to another employee. This can create a hierarchical structure.
+
+### 4. Table: customer
+- **Primary Key:** 
+  - `customer_id`
+- **Foreign Keys:** 
+  - `support_rep_id` (can reference `employee.employee_id`).
+- **Inferred Relationships:** 
+  - Each `customer` can have a support representative (employee) assigned to them, establishing a many-to-one relationship between `customer` and `employee`.
+
+### 5. Table: invoice
+- **Primary Key:** 
+  - `invoice_id`
+- **Foreign Keys:** 
+  - `customer_id` (references `customer.customer_id`)
+- **Inferred Relationships:** 
+  - Each `invoice` corresponds to a `customer`, thus establishing a many-to-one relationship between `invoice` and `customer`.
+
+### 6. Table: invoice_line
+- **Primary Key:** 
+  - `invoice_line_id`
+- **Foreign Keys:** 
+  - `invoice_id` (references `invoice.invoice_id`)
+  - `track_id` (references `track.track_id`)
+- **Inferred Relationships:** 
+  - Each `invoice_line` pertains to an `invoice`, and each line can also represent a specific `track`, resulting in a many-to-one relationship with both `invoice` and `track`.
+
+### 7. Table: track
+- **Primary Key:** 
+  - `track_id`
+- **Foreign Keys:** 
+  - `album_id` (references `album.album_id`)
+  - `media_type_id` (references `media_type.media_type_id`)
+  - `genre_id` (references `genre.genre_id`)
+- **Inferred Relationships:** 
+  - Each `track` is a part of one `album`, and can also belong to a specific `media type` and `genre`, establishing many-to-one relationships with `album`, `media_type`, and `genre`.
+
+### 8. Table: playlist
+- **Primary Key:** 
+  - `playlist_id`
+- **Foreign Keys:** 
+  - None.
+- **Inferred Relationships:** 
+  - A `playlist` can hold multiple tracks, which is further defined in the `playlist_track` table.
+
+### 9. Table: playlist_track
+- **Primary Key:** 
+  - (Composite Key) `playlist_id`, `track_id`
+- **Foreign Keys:** 
+  - `playlist_id` (references `playlist.playlist_id`)
+  - `track_id` (references `track.track_id`)
+- **Inferred Relationships:** 
+  - This is a junction table that establishes a many-to-many relationship between `playlist` and `track`.
+
+### 10. Table: genre
+- **Primary Key:** 
+  - `genre_id`
+- **Foreign Keys:** 
+  - None.
+- **Inferred Relationships:** 
+  - The `genre` table can be related to the `track` table as tracks have genres assigned to them.
+
+### 11. Table: media_type
+- **Primary Key:** 
+  - `media_type_id`
+- **Foreign Keys:** 
+  - None.
+- **Inferred Relationships:** 
+  - The `media_type` table can be associated with the `track` table, as tracks have specific media types.
+
+### Summary of Relationships
+- Artist → Album: One-to-many.
+- Album → Track: One-to-many.
+- Genre → Track: One-to-many.
+- Media Type → Track: One-to-many.
+- Employee → Customer: One-to-many (support role).
+- Customer → Invoice: One-to-many.
+- Invoice → Invoice Line: One-to-many.
+- Track → Invoice Line: One-to-many.
+- Playlist → Playlist Track: One-to-many.
+- Track → Playlist Track: Many-to-many through Playlist Track. 
+
+This schema provides a comprehensive overview of music-related entities with a clear relational structure, lending itself well to functionality typical of a music database system.
