@@ -7,3 +7,4 @@ psycopg2-binary==2.9.9
 mysql==0.0.3
 mysql-connector==2.2.9
 mysql-connector-python==9.0.0
+pkgconfig==1.5.5
