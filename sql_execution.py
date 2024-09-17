@@ -1,6 +1,6 @@
 import sqlite3
 import psycopg2
-import mysql.connector
+# import mysql.connector
 
 def execute_sql(db_type: str, db_path: str, sql_query: str, **kwargs) -> str:
     try:
@@ -17,14 +17,14 @@ def execute_sql(db_type: str, db_path: str, sql_query: str, **kwargs) -> str:
                 host=kwargs.get('db_host', 'localhost'),
                 port=kwargs.get('db_port', 5432)
             )
-        elif db_type == 'mysql':
-            conn = mysql.connector.connect(
-                database=kwargs.get('db_name', ''),
-                user=kwargs.get('db_user', ''),
-                password=kwargs.get('db_password', ''),
-                host=kwargs.get('db_host', 'localhost'),
-                port=kwargs.get('db_port', 3306)
-            )
+        # elif db_type == 'mysql':
+        #     conn = mysql.connector.connect(
+        #         database=kwargs.get('db_name', ''),
+        #         user=kwargs.get('db_user', ''),
+        #         password=kwargs.get('db_password', ''),
+        #         host=kwargs.get('db_host', 'localhost'),
+        #         port=kwargs.get('db_port', 3306)
+        #     )
         else:
             return f"Unsupported database type: {db_type}"
 

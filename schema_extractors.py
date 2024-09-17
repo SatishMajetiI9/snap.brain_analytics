@@ -1,6 +1,6 @@
 import os
 import sqlite3
-import pymysql
+# import pymysql
 import psycopg2
 from openai_api import call_openapi
 
@@ -30,35 +30,35 @@ def extract_sqlite_schema(db_path):
         return None
 
 # MySQL
-def extract_mysql_schema(db_user, db_password, db_host, db_port, db_name):
-    try:
-        conn = pymysql.connect(
-            host=db_host,
-            user=db_user,
-            password=db_password,
-            db=db_name,
-            port=int(db_port)
-        )
-        cursor = conn.cursor()
-        cursor.execute("SHOW TABLES;")
-        tables = cursor.fetchall()
+# def extract_mysql_schema(db_user, db_password, db_host, db_port, db_name):
+#     try:
+#         conn = pymysql.connect(
+#             host=db_host,
+#             user=db_user,
+#             password=db_password,
+#             db=db_name,
+#             port=int(db_port)
+#         )
+#         cursor = conn.cursor()
+#         cursor.execute("SHOW TABLES;")
+#         tables = cursor.fetchall()
 
-        schema = []
-        for table in tables:
-            table_name = table[0]
-            schema.append(f"Table: {table_name}")
-            cursor.execute(f"DESCRIBE {table_name};")
-            columns = cursor.fetchall()
-            schema.append("Columns:")
-            for col in columns:
-                schema.append(f"  {col[0]} ({col[1]})")
-            schema.append("")
-        conn.close()
-        return "\n".join(schema)
+#         schema = []
+#         for table in tables:
+#             table_name = table[0]
+#             schema.append(f"Table: {table_name}")
+#             cursor.execute(f"DESCRIBE {table_name};")
+#             columns = cursor.fetchall()
+#             schema.append("Columns:")
+#             for col in columns:
+#                 schema.append(f"  {col[0]} ({col[1]})")
+#             schema.append("")
+#         conn.close()
+#         return "\n".join(schema)
 
-    except pymysql.MySQLError as e:
-        print(f"Error extracting MySQL schema: {e}")
-        return None
+#     except pymysql.MySQLError as e:
+#         print(f"Error extracting MySQL schema: {e}")
+#         return None
 
 # PostgreSQL
 def extract_postgresql_schema(db_user, db_password, db_host, db_port, db_name):

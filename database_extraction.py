@@ -8,8 +8,8 @@ def extract_database_information(db_path, db_type, schema_folder, db_user=None, 
 
     if db_type == 'sqlite':
         schema_report = extract_sqlite_schema(db_path)
-    elif db_type == 'mysql':
-        schema_report = extract_mysql_schema(db_user, db_password, db_host, db_port, db_name)
+    # elif db_type == 'mysql':
+    #     schema_report = extract_mysql_schema(db_user, db_password, db_host, db_port, db_name)
     elif db_type == 'postgresql':
         schema_report = extract_postgresql_schema(db_user, db_password, db_host, db_port, db_name)
     else:
