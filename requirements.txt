@@ -4,8 +4,8 @@ langchain-openai==0.1.23
 openai==1.42.0
 PyMySQL==1.1.1
 psycopg2-binary==2.9.9
-mysql==0.0.3
-mysqlclient==2.2.4
-mysql-connector==2.2.9
-mysql-connector-python==9.0.0
+# mysql==0.0.3
+# mysqlclient==2.2.4
+# mysql-connector==2.2.9
+# mysql-connector-python==9.0.0
 pkgconfig==1.5.5

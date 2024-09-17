@@ -1,6 +1,6 @@
 import os
 from openai_api import call_openapi
-from schema_extractors import extract_sqlite_schema, extract_mysql_schema, extract_postgresql_schema
+from schema_extractors import extract_sqlite_schema, extract_postgresql_schema #, extract_mysql_schema
 
 def extract_database_information(db_path, db_type, schema_folder, db_user=None, db_password=None, db_host=None, db_port=None, db_name=None):
     db_name = db_name if db_name else os.path.splitext(os.path.basename(db_path))[0]
