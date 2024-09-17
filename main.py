@@ -79,34 +79,38 @@ if st.button("Generate and Visualize"):
                                           db_user=db_user, db_password=db_password, db_host=db_host, db_port=db_port, db_name=db_name)
 
     if schema_data:
-        st.write("Schema data loaded successfully!")
-        with st.spinner("Generating SQL query..."):
+        # st.write("Schema data loaded successfully!")
+        # with st.spinner("Generating SQL query..."):
+        with st.spinner("Executing SQL..."):
             query_generation = sql_query_generation(user_input, schema_data, db_type)
             query = query_generation['query']
             columns = query_generation['column_names']
-            st.code(query, language='sql')
+            # st.code(query, language='sql')
 
-        with st.spinner("Executing SQL query..."):
+        # with st.spinner("Executing SQL query..."):
             if db_type == 'sqlite':
                 query_result = execute_sql(db_type, db_path, query)
             else:
                 query_result = execute_sql(db_type, db_path=None, sql_query=query,
                                            db_user=db_user, db_password=db_password, db_host=db_host, db_port=db_port, db_name=db_name)
             
-            st.write("Query result:")
+            st.write("**Result**: ")
             df = pd.DataFrame(query_result, columns=columns)
             df = df.reset_index(drop=True)
+            df.index = df.index + 1
             st.dataframe(df)
 
-        with st.spinner("Deciding chart type..."):
-            chart_json = decide_chart_execution(user_input, query, query_result)
-            st.write("Chart configuration:")
-            st.json(chart_json)
+        # with st.spinner("Deciding chart type..."):
+        with st.spinner("Generating chart..."):
 
-            st.write("Summary \n")
+            chart_json = decide_chart_execution(user_input, query, query_result)
+            # st.write("Chart configuration:")
+            # st.json(chart_json)
+
+            st.write("**Summary**: ")
             st.write(chart_json['summary'])
 
-        with st.spinner("Generating chart..."):
+        # with st.spinner("Generating chart..."):
             chart_html = generate_chartjs_html(chart_json)
             st.components.v1.html(chart_html, height=800)
 
