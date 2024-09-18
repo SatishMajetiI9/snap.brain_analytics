@@ -82,7 +82,6 @@ else:
     db_password = st.text_input(f"Enter your {db_type} password", "your_db_password", type='password')
     db_name = st.text_input(f"Enter your {db_type} database name", "your_db_name")
 
-# Button to trigger the process
 if st.button("Generate and Visualize"):
     with st.spinner("Extracting schema data..."):
         if db_type == 'sqlite':
@@ -102,36 +101,41 @@ if st.button("Generate and Visualize"):
     if schema_data:
         with st.spinner("Executing SQL..."):
             query_generation = sql_query_generation(user_input, schema_data, db_type)
-            query = query_generation['query']
-            columns = query_generation['column_names']
+            if 'caution' not in query_generation:
+                query = query_generation['query']
+                columns = query_generation['column_names']
 
-            if db_type == 'sqlite':
-                query_result = execute_sql(db_type, db_path, query)
-            else:
-                query_result = execute_sql(
-                    db_type,
-                    db_path=None,
-                    sql_query=query,
-                    db_user=db_user,
-                    db_password=db_password,
-                    db_host=db_host,
-                    db_port=db_port,
-                    db_name=db_name
-                )
+                if db_type == 'sqlite':
+                    query_result = execute_sql(db_type, db_path, query)
+                else:
+                    query_result = execute_sql(
+                        db_type,
+                        db_path=None,
+                        sql_query=query,
+                        db_user=db_user,
+                        db_password=db_password,
+                        db_host=db_host,
+                        db_port=db_port,
+                        db_name=db_name
+                    )
 
-            st.write("**Result**:")
-            df = pd.DataFrame(query_result, columns=columns)
-            df = df.reset_index(drop=True)
-            df.index = df.index + 1
-            st.dataframe(df)
+                st.write("**Result**:")
+                df = pd.DataFrame(query_result, columns=columns)
+                df = df.reset_index(drop=True)
+                df.index = df.index + 1
+                st.dataframe(df)
 
-        with st.spinner("Generating chart..."):
-            chart_json = decide_chart_execution(user_input, query, query_result)
+        if 'caution' not in query_generation:
+            with st.spinner("Generating chart..."):
+                chart_json = decide_chart_execution(user_input, query, query_result)
 
-            st.write("**Summary**:")
-            st.write(chart_json['summary'])
+                st.write("**Summary**:")
+                st.write(chart_json['summary'])
 
-            chart_html = generate_chartjs_html(chart_json)
-            st.components.v1.html(chart_html, height=800)
+                chart_html = generate_chartjs_html(chart_json)
+                st.components.v1.html(chart_html, height=800)
+
+        if 'caution' in query_generation:
+            st.warning(query_generation['caution'])
     else:
         st.error("Error in extracting schema or generating query. Please check the inputs.")
