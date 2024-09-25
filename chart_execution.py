@@ -7,6 +7,8 @@ def generate_chartjs_html(chart_json):
     labels = chart_json['labels']
     datasets = chart_json['datasets']
     options = chart_json['options']
+
+    print(chart_json)
     
     labels_js = json.dumps(labels)
     datasets_js = json.dumps(datasets)
